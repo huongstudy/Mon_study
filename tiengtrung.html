@@ -3,26 +3,169 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MON STUDY - Tiếng Trung HSK 1</title>
+  <title>MON STUDY - Tiếng Trung HSK 1 PRO MAX</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .flashcard-simple {
-      background: var(--bg-color, #ffffff);
-      border: 2px solid var(--border-color, #e2e8f0);
-      border-radius: 12px;
-      padding: 25px;
-      text-align: center;
+    .sub-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .sub-tab-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #e2e8f0;
+      background: #f7fafc;
+      border-radius: 8px;
+      font-weight: 600;
       cursor: pointer;
-      min-height: 200px;
+      transition: all 0.2s;
+      font-size: 13px;
+    }
+    .sub-tab-btn.active {
+      background: #ee5d50;
+      color: white;
+      border-color: #ee5d50;
+    }
+
+    /* Flashcard 3D */
+    .flashcard-scene {
+      perspective: 1000px;
+      width: 100%;
+      height: 230px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+    .flashcard-object {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .flashcard-object.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      transition: all 0.2s ease;
+      border-radius: 12px;
+      border: 2px solid var(--border-color, #e2e8f0);
+      background: var(--bg-color, #ffffff);
+      padding: 20px;
     }
-    .flashcard-simple:hover {
-      border-color: #ee5d50;
-      box-shadow: 0 4px 12px rgba(238, 93, 80, 0.15);
+    .card-face.back {
+      transform: rotateY(180deg);
+      background: #fff5f5;
+      border-color: #feb2b2;
+    }
+
+    .filter-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .filter-input, .filter-select {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      background: var(--bg-color, #fff);
+      color: inherit;
+    }
+    .vocab-list-container {
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .vocab-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Khung luyện viết Canvas */
+    .writing-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+    .canvas-box {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      border: 2px dashed #cbd5e0;
+      border-radius: 12px;
+      background: #fffbfb;
+      margin: 15px 0;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.03);
+    }
+    canvas {
+      touch-action: none;
+      cursor: crosshair;
+    }
+    .bg-char {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 180px;
+      color: #edf2f7;
+      z-index: 0;
+      user-select: none;
+      font-weight: bold;
+    }
+
+    /* Ghi chú cá nhân */
+    .note-box {
+      margin-top: 15px;
+      width: 100%;
+    }
+    .note-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 13px;
+      resize: vertical;
+      min-height: 60px;
+      background: var(--bg-color, #fff);
+      color: inherit;
+    }
+
+    /* Khu vực luyện nói & chấm điểm */
+    .speech-box {
+      margin-top: 15px;
+      padding: 12px;
+      background: #ebf8ff;
+      border: 1px solid #bee3f8;
+      border-radius: 8px;
+      text-align: center;
     }
   </style>
 </head>
@@ -33,112 +176,589 @@
 
     <div class="header" style="background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%); border-left: 5px solid #ee5d50;">
       <div>
-        <h1 style="color: #c53030;">🇨🇳 Học Tiếng Trung HSK 1</h1>
-        <p style="font-size: 13px; color: #718096; margin-top: 4px;">Nền tảng 150 từ vựng cốt lõi</p>
+        <h1 style="color: #c53030;">🇨🇳 Tiếng Trung HSK 1 PRO MAX</h1>
+        <p style="font-size: 13px; color: #718096; margin-top: 4px;">Tích hợp chủ đề chuyên sâu, luyện viết, ghi chú & nhận diện giọng nói</p>
       </div>
       <button id="themeToggleBtn" class="theme-btn">🌙 Chế độ tối</button>
     </div>
 
+    <!-- Thanh tiến độ -->
+    <div class="card" style="padding: 15px; margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 6px;">
+        <span>📊 Tiến độ ôn tập HSK 1</span>
+        <span id="progressText">0 / 150 từ (0%)</span>
+      </div>
+      <div style="width: 100%; height: 8px; background: #edf2f7; border-radius: 4px; overflow: hidden;">
+        <div id="progressBar" style="height: 100%; width: 0%; background: #48bb78; transition: width 0.4s;"></div>
+      </div>
+    </div>
+
     <div class="card">
-      <div class="mode-selector">
-        <button id="btnModeFlashcard" class="mode-btn active" onclick="switchZhMode('flashcard')">📇 Flashcard HSK 1</button>
-        <button id="btnModeQuiz" class="mode-btn" onclick="switchZhMode('quiz')">🧩 Quiz Trắc Nghiệm</button>
+      <div class="mode-selector" style="flex-wrap: wrap;">
+        <button id="btnModeFlashcard" class="mode-btn active" onclick="switchZhMode('flashcard')">📇 Thẻ Flashcard</button>
+        <button id="btnModeList" class="mode-btn" onclick="switchZhMode('list')">📚 Tra cứu & Chủ đề</button>
+        <button id="btnModeWriting" class="mode-btn" onclick="switchZhMode('writing')">✍️ Luyện Viết Tay</button>
+        <button id="btnModeQuiz" class="mode-btn" onclick="switchZhMode('quiz')">🧩 Quiz Tốc Độ</button>
       </div>
 
       <!-- 1. Flashcard View -->
       <div id="zhFlashcardView">
-        <div class="flashcard-simple" onclick="toggleCardDetail()">
-          <span class="badge" style="background: #feebc8; color: #c05621;">HSK 1</span>
-          <h2 id="fcHanzi" style="font-size: 48px; color: #1a202c; margin: 15px 0 5px 0;">你好</h2>
-          
-          <div id="cardDetail" style="display: none; margin-top: 10px;">
-            <h3 id="fcPinyin" style="font-size: 24px; color: #3182ce; margin-bottom: 4px;">nǐ hǎo</h3>
-            <p id="fcMeaning" style="font-size: 18px; color: #2d3748; font-weight: 600;">Xin chào</p>
-          </div>
-
-          <p id="fcHint" class="hint-text" style="margin-top: 15px; color: #a0aec0; font-size: 12px;">👆 Bấm vào thẻ để hiện/ẩn Pinyin & Nghĩa</p>
+        <div class="sub-tabs">
+          <button class="sub-tab-btn active" id="tabAll" onclick="setCardFilter('all')">Toàn bộ (150 từ)</button>
+          <button class="sub-tab-btn" id="tabMistake" onclick="setCardFilter('mistake')">⚠️ Từ hay sai (<span id="mistakeCount">0</span> từ)</button>
         </div>
 
-        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+        <div class="flashcard-scene" onclick="flipCard()">
+          <div class="flashcard-object" id="flashcardObj">
+            <div class="card-face front">
+              <span class="badge" style="background: #feebc8; color: #c05621; position: absolute; top: 15px; right: 15px;">HSK 1</span>
+              <h2 id="fcHanzi" style="font-size: 50px; color: #1a202c; margin: 5px 0;">你好</h2>
+              <h4 id="fcFrontPinyin" style="font-size: 18px; color: #3182ce; margin-bottom: 8px;">nǐ hǎo</h4>
+              <button onclick="event.stopPropagation(); speakText(currentList[currentCardIndex].hanzi)" style="background: #ebf8ff; border: none; color: #3182ce; padding: 4px 10px; border-radius: 15px; font-weight: bold; cursor: pointer;">🔊 Nghe</button>
+              <p style="margin-top: 10px; color: #a0aec0; font-size: 11px;">👆 Bấm vào thẻ để lật xem nghĩa</p>
+            </div>
+            <div class="card-face back">
+              <h3 id="fcPinyin" style="font-size: 24px; color: #3182ce; margin-bottom: 6px;">nǐ hǎo</h3>
+              <p id="fcMeaning" style="font-size: 20px; color: #2d3748; font-weight: 600; text-align: center;">Xin chào</p>
+              <button onclick="event.stopPropagation(); speakText(currentList[currentCardIndex].hanzi)" style="background: #fff; border: 1px solid #feb2b2; color: #c53030; padding: 4px 10px; border-radius: 15px; font-weight: bold; cursor: pointer; margin-top: 10px;">🔊 Nghe lại</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 15px;">
           <button class="pomo-btn reset" onclick="prevCard()">⬅️ Từ trước</button>
           <button class="checkin-btn" onclick="nextCard()">Từ tiếp ➡️</button>
         </div>
       </div>
 
-      <!-- 2. Quiz View -->
-      <div id="zhQuizView" style="display: none;">
-        <div class="quiz-card">
-          <div class="quiz-header">
-            <span>Thách thức HSK 1</span>
-            <span id="quizScore" class="badge" style="background: #c6f6d5; color: #22543d;">Điểm: 0</span>
+      <!-- 2. Tra cứu & Chủ đề + Ghi chú + Đọc sửa lỗi -->
+      <div id="zhListView" style="display: none;">
+        <div class="filter-box">
+          <input type="text" id="searchInput" class="filter-input" placeholder="🔍 Tìm kiếm chữ Hán, Pinyin hoặc Nghĩa..." oninput="filterVocabulary()">
+          <select id="categorySelect" class="filter-select" onchange="filterVocabulary()">
+            <option value="all">📁 Tất cả chủ đề</option>
+            <option value="giao_tiep">🤝 Chào hỏi & Giao tiếp công sở</option>
+            <option value="so_dem">🔢 Số đếm & Tiền tệ</option>
+            <option value="gia_dinh">👨‍👩‍👧 Gia đình & Con người</option>
+            <option value="do_an">🍲 Đồ ăn, Thức uống & Mua sắm</option>
+            <option value="thoi_gian">⏳ Thời gian & Thời tiết</option>
+            <option value="thong_dung">⚡ Động & Tính từ thông dụng</option>
+          </select>
+        </div>
+        <div class="vocab-list-container" id="vocabListContainer"></div>
+      </div>
+
+      <!-- 3. Luyện Viết Tay View -->
+      <div id="zhWritingView" style="display: none;">
+        <div class="writing-container">
+          <h3 style="color: #2d3748; margin-bottom: 5px;">✍️ Tập viết chữ Hán theo mẫu</h3>
+          <p style="font-size: 13px; color: #718096;">Dùng chuột hoặc ngón tay viết đè lên khung chữ mờ bên dưới</p>
+          
+          <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+            <button class="pomo-btn reset" onclick="prevWritingChar()">⬅️ Từ trước</button>
+            <span id="writingCharTitle" style="font-size: 20px; font-weight: bold; color: #c53030;">你好 - nǐ hǎo</span>
+            <button class="checkin-btn" onclick="nextWritingChar()">Từ tiếp ➡️</button>
           </div>
-          <h2 id="quizWord" style="font-size: 40px; margin: 15px 0; color: #1a202c;">你好</h2>
-          <div class="quiz-options" id="quizOptions"></div>
+
+          <div class="canvas-box">
+            <div id="bgCharDisplay" class="bg-char">你</div>
+            <canvas id="drawCanvas" width="250" height="250"></canvas>
+          </div>
+
+          <div style="display: flex; gap: 10px;">
+            <button class="pomo-btn reset" onclick="clearCanvas()">🗑️ Xóa viết lại</button>
+            <button class="checkin-btn" onclick="speakText(writingData[currentWritingIndex].hanzi)">🔊 Nghe phát âm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Quiz View -->
+      <div id="zhQuizView" style="display: none;">
+        <div class="quiz-card" style="background: var(--bg-color, #fff); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color, #e2e8f0); text-align: center;">
+          <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; margin-bottom: 10px;">
+            <span id="gameTimer" style="color: #e53e3e; font-size: 15px; font-weight: bold;">⏱️ Thời gian: 60s</span>
+            <div>
+              <span id="highScore" class="badge" style="background: #feebc8; color: #c05621; padding: 4px 10px; border-radius: 6px; margin-right: 5px;">👑 Kỷ lục: 0</span>
+              <span id="quizScore" class="badge" style="background: #c6f6d5; color: #22543d; padding: 4px 10px; border-radius: 6px;">Điểm: 0</span>
+            </div>
+          </div>
+
+          <div style="width: 100%; height: 6px; background: #edf2f7; border-radius: 3px; overflow: hidden; margin-top: 5px;">
+            <div id="questionBar" style="height: 100%; width: 100%; background: #ee5d50; transition: width 0.1s linear;"></div>
+          </div>
+
+          <h2 id="quizWord" style="font-size: 42px; margin: 15px 0; color: #1a202c; cursor: pointer;" onclick="speakText(this.innerText)" title="Bấm để nghe">你好 🔊</h2>
+          <div id="quizOptions" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;"></div>
+
+          <button id="btnRestartQuiz" class="checkin-btn" style="margin-top: 20px; display: none;" onclick="startQuizGame()">🔄 Chơi lại lượt mới</button>
         </div>
       </div>
     </div>
 
   </div>
 
-  <script src="script.js"></script>
-
-  <!-- Script xử lý riêng cho Tiếng Trung -->
   <script>
     const hsk1Data = [
-      { hanzi: "你好", pinyin: "nǐ hǎo", meaning: "Xin chào" },
-      { hanzi: "谢谢", pinyin: "xièxie", meaning: "Cảm ơn" },
-      { hanzi: "不客气", pinyin: "bú kèqi", meaning: "Đừng khách khí / Không có gì" },
-      { hanzi: "再见", pinyin: "zàijiàn", meaning: "Tạm biệt" },
-      { hanzi: "爱", pinyin: "ài", meaning: "Yêu, thích" },
-      { hanzi: "八", pinyin: "bā", meaning: "Số 8" },
-      { hanzi: "爸爸", pinyin: "bàba", meaning: "Bố, ba" },
-      { hanzi: "杯子", pinyin: "bēizi", meaning: "Cái cốc, ly" },
-      { hanzi: "北京", pinyin: "Běijīng", meaning: "Bắc Kinh" },
-      { hanzi: "本", pinyin: "běn", meaning: "Cuốn, quyển (lượng từ)" }
+      { hanzi: "爱", pinyin: "ài", meaning: "Yêu, thích", cat: "thong_dung" },
+      { hanzi: "八", pinyin: "bā", meaning: "Số 8", cat: "so_dem" },
+      { hanzi: "爸爸", pinyin: "bàba", meaning: "Bố, ba", cat: "gia_dinh" },
+      { hanzi: "杯子", pinyin: "bēizi", meaning: "Cái cốc, ly", cat: "do_an" },
+      { hanzi: "北京", pinyin: "Běijīng", meaning: "Bắc Kinh", cat: "giao_tiep" },
+      { hanzi: "本", pinyin: "běn", meaning: "Cuốn, quyển (lượng từ)", cat: "thong_dung" },
+      { hanzi: "不客气", pinyin: "bú kèqi", meaning: "Không có gì, đừng khách khí", cat: "giao_tiep" },
+      { hanzi: "不", pinyin: "bù", meaning: "Không", cat: "thong_dung" },
+      { hanzi: "菜", pinyin: "cài", meaning: "Món ăn, rau", cat: "do_an" },
+      { hanzi: "茶", pinyin: "chá", meaning: "Trà", cat: "do_an" },
+      { hanzi: "吃", pinyin: "chī", meaning: "Ăn", cat: "do_an" },
+      { hanzi: "出租车", pinyin: "chūzūchē", meaning: "Xe taxi", cat: "do_an" },
+      { hanzi: "打电话", pinyin: "dǎ diànhuà", meaning: "Gọi điện thoại", cat: "giao_tiep" },
+      { hanzi: "大", pinyin: "dà", meaning: "To, lớn", cat: "thong_dung" },
+      { hanzi: "的", pinyin: "de", meaning: "Của (trợ từ)", cat: "thong_dung" },
+      { hanzi: "点", pinyin: "diǎn", meaning: "Giờ, điểm", cat: "thoi_gian" },
+      { hanzi: "电脑", pinyin: "diànnǎo", meaning: "Máy tính", cat: "thong_dung" },
+      { hanzi: "电视", pinyin: "diànshì", meaning: "Tivi", cat: "thong_dung" },
+      { hanzi: "电影", pinyin: "diànyǐng", meaning: "Phim ảnh", cat: "thong_dung" },
+      { hanzi: "东西", pinyin: "dōngxi", meaning: "Đồ đạc, vật dụng", cat: "do_an" },
+      { hanzi: "都", pinyin: "dōu", meaning: "Đều", cat: "thong_dung" },
+      { hanzi: "读", pinyin: "dú", meaning: "Đọc", cat: "thong_dung" },
+      { hanzi: "对不起", pinyin: "duìbuqǐ", meaning: "Xin lỗi", cat: "giao_tiep" },
+      { hanzi: "多", pinyin: "duō", meaning: "Nhiều", cat: "thong_dung" },
+      { hanzi: "多少", pinyin: "duōshao", meaning: "Bao nhiêu", cat: "so_dem" },
+      { hanzi: "儿子", pinyin: "érzi", meaning: "Con trai", cat: "gia_dinh" },
+      { hanzi: "二", pinyin: "èr", meaning: "Số 2", cat: "so_dem" },
+      { hanzi: "饭店", pinyin: "fàndiàn", meaning: "Nhà hàng, khách sạn", cat: "do_an" },
+      { hanzi: "飞机", pinyin: "fēijī", meaning: "Máy bay", cat: "thong_dung" },
+      { hanzi: "分钟", pinyin: "fēnzhōng", meaning: "Phút", cat: "thoi_gian" },
+      { hanzi: "高兴", pinyin: "gāoxìng", meaning: "Vui vẻ, vui mừng", cat: "thong_dung" },
+      { hanzi: "个", pinyin: "gè", meaning: "Cái, người (lượng từ)", cat: "thong_dung" },
+      { hanzi: "工作", pinyin: "gōngzuò", meaning: "Làm việc, công việc", cat: "giao_tiep" },
+      { hanzi: "狗", pinyin: "gǒu", meaning: "Con chó", cat: "gia_dinh" },
+      { hanzi: "汉语", pinyin: "Hànyǔ", meaning: "Tiếng Trung", cat: "giao_tiep" },
+      { hanzi: "好", pinyin: "hǎo", meaning: "Tốt, hay, khỏe", cat: "thong_dung" },
+      { hanzi: "号", pinyin: "hào", meaning: "Ngày, số", cat: "thoi_gian" },
+      { hanzi: "喝", pinyin: "hē", meaning: "Uống", cat: "do_an" },
+      { hanzi: "和", pinyin: "hé", meaning: "Và, cùng với", cat: "thong_dung" },
+      { hanzi: "很", pinyin: "hěn", meaning: "Rất", cat: "thong_dung" },
+      { hanzi: "后面", pinyin: "hòumiàn", meaning: "Phía sau", cat: "thong_dung" },
+      { hanzi: "回", pinyin: "huí", meaning: "Về, quay lại", cat: "thong_dung" },
+      { hanzi: "会", pinyin: "huì", meaning: "Biết, có thể", cat: "thong_dung" },
+      { hanzi: "几", pinyin: "jǐ", meaning: "Mấy", cat: "so_dem" },
+      { hanzi: "家", pinyin: "jiā", meaning: "Nhà, gia đình", cat: "gia_dinh" },
+      { hanzi: "叫", pinyin: "jiào", meaning: "Tên là, gọi", cat: "giao_tiep" },
+      { hanzi: "今天", pinyin: "jīntiān", meaning: "Hôm nay", cat: "thoi_gian" },
+      { hanzi: "九", pinyin: "jiǔ", meaning: "Số 9", cat: "so_dem" },
+      { hanzi: "开", pinyin: "kāi", meaning: "Mở, lái xe", cat: "thong_dung" },
+      { hanzi: "看", pinyin: "kàn", meaning: "Xem, nhìn, đọc", cat: "thong_dung" },
+      { hanzi: "看见", pinyin: "kànjiàn", meaning: "Nhìn thấy", cat: "thong_dung" },
+      { hanzi: "块", pinyin: "kuài", meaning: "Đồng (tiền), cục, miếng", cat: "so_dem" },
+      { hanzi: "来", pinyin: "lái", meaning: "Đến, tới", cat: "thong_dung" },
+      { hanzi: "老师", pinyin: "lǎoshī", meaning: "Thầy/cô giáo", cat: "gia_dinh" },
+      { hanzi: "了", pinyin: "le", meaning: "Rồi (trợ từ)", cat: "thong_dung" },
+      { hanzi: "冷", pinyin: "lěng", meaning: "Lạnh", cat: "thoi_gian" },
+      { hanzi: "里", pinyin: "lǐ", meaning: "Bên trong", cat: "thong_dung" },
+      { hanzi: "六", pinyin: "liù", meaning: "Số 6", cat: "so_dem" },
+      { hanzi: "妈妈", pinyin: "māma", meaning: "Mẹ", cat: "gia_dinh" },
+      { hanzi: "吗", pinyin: "ma", meaning: "Không? (trợ từ nghi vấn)", cat: "giao_tiep" },
+      { hanzi: "买", pinyin: "mǎi", meaning: "Mua", cat: "do_an" },
+      { hanzi: "慢", pinyin: "màn", meaning: "Chậm", cat: "thong_dung" },
+      { hanzi: "忙", pinyin: "máng", meaning: "Bận rộn", cat: "thong_dung" },
+      { hanzi: "猫", pinyin: "māo", meaning: "Con mèo", cat: "gia_dinh" },
+      { hanzi: "没关系", pinyin: "méi guānxi", meaning: "Không sao cả", cat: "giao_tiep" },
+      { hanzi: "没有", pinyin: "méiyǒu", meaning: "Không có", cat: "thong_dung" },
+      { hanzi: "米饭", pinyin: "mǐfàn", meaning: "Cơm", cat: "do_an" },
+      { hanzi: "明天", pinyin: "míngtiān", meaning: "Ngày mai", cat: "thoi_gian" },
+      { hanzi: "名字", pinyin: "míngzi", meaning: "Tên", cat: "giao_tiep" },
+      { hanzi: "哪", pinyin: "nǎ", meaning: "Nào, ở đâu", cat: "thong_dung" },
+      { hanzi: "哪儿", pinyin: "nǎr", meaning: "Đâu, chỗ nào", cat: "thong_dung" },
+      { hanzi: "那", pinyin: "nà", meaning: "Kia, đó", cat: "thong_dung" },
+      { hanzi: "呢", pinyin: "ne", meaning: "Thế còn...?", cat: "giao_tiep" },
+      { hanzi: "能", pinyin: "néng", meaning: "Có thể", cat: "thong_dung" },
+      { hanzi: "你", pinyin: "nǐ", meaning: "Bạn, anh, chị...", cat: "giao_tiep" },
+      { hanzi: "年", pinyin: "nián", meaning: "Năm", cat: "thoi_gian" },
+      { hanzi: "女儿", pinyin: "nǚ'ér", meaning: "Con gái", cat: "gia_dinh" },
+      { hanzi: "朋友", pinyin: "péngyou", meaning: "Bạn bè", cat: "gia_dinh" },
+      { hanzi: "漂亮", pinyin: "piàoliang", meaning: "Đẹp, xinh đẹp", cat: "thong_dung" },
+      { hanzi: "苹果", pinyin: "píngguǒ", meaning: "Quả táo", cat: "do_an" },
+      { hanzi: "七", pinyin: "qī", meaning: "Số 7", cat: "so_dem" },
+      { hanzi: "钱", pinyin: "qián", meaning: "Tiền", cat: "so_dem" },
+      { hanzi: "前面", pinyin: "qiánmiàn", meaning: "Phía trước", cat: "thong_dung" },
+      { hanzi: "请", pinyin: "qǐng", meaning: "Mời, xin", cat: "giao_tiep" },
+      { hanzi: "去", pinyin: "qù", meaning: "Đi", cat: "thong_dung" },
+      { hanzi: "热", pinyin: "rè", meaning: "Nóng", cat: "thoi_gian" },
+      { hanzi: "人", pinyin: "rén", meaning: "Người", cat: "gia_dinh" },
+      { hanzi: "认识", pinyin: "rènshi", meaning: "Quen biết", cat: "giao_tiep" },
+      { hanzi: "三", pinyin: "sān", meaning: "Số 3", cat: "so_dem" },
+      { hanzi: "商店", pinyin: "shāngdiàn", meaning: "Cửa hàng", cat: "do_an" },
+      { hanzi: "上", pinyin: "shàng", meaning: "Trên, lên", cat: "thong_dung" },
+      { hanzi: "上午", pinyin: "shàngwǔ", meaning: "Buổi sáng", cat: "thoi_gian" },
+      { hanzi: "少", pinyin: "shǎo", meaning: "Ít", cat: "thong_dung" },
+      { hanzi: "谁", pinyin: "shéi", meaning: "Ai", cat: "giao_tiep" },
+      { hanzi: "什么", pinyin: "shénme", meaning: "Cái gì, gì", cat: "giao_tiep" },
+      { hanzi: "十", pinyin: "shí", meaning: "Số 10", cat: "so_dem" },
+      { hanzi: "時候", pinyin: "shíhou", meaning: "Lúc, khi", cat: "thoi_gian" },
+      { hanzi: "是", pinyin: "shì", meaning: "Là, đúng", cat: "thong_dung" },
+      { hanzi: "书", pinyin: "shū", meaning: "Sách", cat: "thong_dung" },
+      { hanzi: "水", pinyin: "shuǐ", meaning: "Nước", cat: "do_an" },
+      { hanzi: "水果", pinyin: "shuǐguǒ", meaning: "Trái cây", cat: "do_an" },
+      { hanzi: "睡觉", pinyin: "shuìjiào", meaning: "Đi ngủ", cat: "thong_dung" },
+      { hanzi: "说话", pinyin: "shuōhuà", meaning: "Nói chuyện", cat: "giao_tiep" },
+      { hanzi: "四", pinyin: "sì", meaning: "Số 4", cat: "so_dem" },
+      { hanzi: "岁", pinyin: "suì", meaning: "Tuổi", cat: "so_dem" },
+      { hanzi: "他", pinyin: "tā", meaning: "Anh ấy, cậu ấy", cat: "gia_dinh" },
+      { hanzi: "她", pinyin: "tā", meaning: "Cô ấy", cat: "gia_dinh" },
+      { hanzi: "太", pinyin: "tài", meaning: "Quá, lắm", cat: "thong_dung" },
+      { hanzi: "天气", pinyin: "tiānqì", meaning: "Thời tiết", cat: "thoi_gian" },
+      { hanzi: "听", pinyin: "tīng", meaning: "Nghe", cat: "thong_dung" },
+      { hanzi: "同学", pinyin: "tóngxué", meaning: "Bạn học", cat: "gia_dinh" },
+      { hanzi: "喂", pinyin: "wèi", meaning: "Alo, này", cat: "giao_tiep" },
+      { hanzi: "我", pinyin: "wǒ", meaning: "Tôi, ta", cat: "giao_tiep" },
+      { hanzi: "我们", pinyin: "wǒmen", meaning: "Chúng tôi", cat: "giao_tiep" },
+      { hanzi: "五", pinyin: "wǔ", meaning: "Số 5", cat: "so_dem" },
+      { hanzi: "喜欢", pinyin: "xǐhuan", meaning: "Thích", cat: "thong_dung" },
+      { hanzi: "下", pinyin: "xià", meaning: "Dưới, xuống", cat: "thong_dung" },
+      { hanzi: "下午", pinyin: "xiàwǔ", meaning: "Buổi chiều", cat: "thoi_gian" },
+      { hanzi: "下雨", pinyin: "xiàyǔ", meaning: "Mưa", cat: "thoi_gian" },
+      { hanzi: "先生", pinyin: "xiānsheng", meaning: "Ngài, ông, chồng", cat: "gia_dinh" },
+      { hanzi: "现在", pinyin: "xiànzài", meaning: "Bây giờ", cat: "thoi_gian" },
+      { hanzi: "想", pinyin: "xiǎng", meaning: "Muốn, nhớ", cat: "thong_dung" },
+      { hanzi: "小", pinyin: "xiǎo", meaning: "Nhỏ, bé", cat: "thong_dung" },
+      { hanzi: "小姐", pinyin: "xiǎojiě", meaning: "Cô gái, tiểu thư", cat: "gia_dinh" },
+      { hanzi: "些", pinyin: "xiē", meaning: "Một vài", cat: "thong_dung" },
+      { hanzi: "写", pinyin: "xiě", meaning: "Viết", cat: "thong_dung" },
+      { hanzi: "谢谢", pinyin: "xièxie", meaning: "Cảm ơn", cat: "giao_tiep" },
+      { hanzi: "星期", pinyin: "xīngqī", meaning: "Tuần, thứ", cat: "thoi_gian" },
+      { hanzi: "学生", pinyin: "xuésheng", meaning: "Học sinh", cat: "gia_dinh" },
+      { hanzi: "学习", pinyin: "xuéxí", meaning: "Học tập", cat: "thong_dung" },
+      { hanzi: "学校", pinyin: "xuéxiào", meaning: "Trường học", cat: "thong_dung" },
+      { hanzi: "一", pinyin: "yī", meaning: "Số 1", cat: "so_dem" },
+      { hanzi: "衣服", pinyin: "yīfu", meaning: "Quần áo", cat: "do_an" },
+      { hanzi: "医生", pinyin: "yīshēng", meaning: "Bác sĩ", cat: "gia_dinh" },
+      { hanzi: "医院", pinyin: "yīyuàn", meaning: "Bệnh viện", cat: "thong_dung" },
+      { hanzi: "椅子", pinyin: "yǐzi", meaning: "Cái ghế", cat: "thong_dung" },
+      { hanzi: "有", pinyin: "yǒu", meaning: "Có", cat: "thong_dung" },
+      { hanzi: "月", pinyin: "yuè", meaning: "Tháng", cat: "thoi_gian" },
+      { hanzi: "再见", pinyin: "zàijiàn", meaning: "Tạm biệt", cat: "giao_tiep" },
+      { hanzi: "在", pinyin: "zài", meaning: "Ở, tại", cat: "thong_dung" },
+      { hanzi: "怎么", pinyin: "zěnme", meaning: "Như thế nào", cat: "giao_tiep" },
+      { hanzi: "怎么样", pinyin: "zěnmeyàng", meaning: "Thế nào", cat: "giao_tiep" },
+      { hanzi: "这", pinyin: "zhè", meaning: "Này, đây", cat: "thong_dung" },
+      { hanzi: "中国", pinyin: "Zhōngguó", meaning: "Trung Quốc", cat: "giao_tiep" },
+      { hanzi: "中午", pinyin: "zhōngwǔ", meaning: "Buổi trưa", cat: "thoi_gian" },
+      { hanzi: "住", pinyin: "zhù", meaning: "Ở, cư trú", cat: "thong_dung" },
+      { hanzi: "桌子", pinyin: "zhuōzi", meaning: "Cái bàn", cat: "thong_dung" },
+      { hanzi: "字", pinyin: "zì", meaning: "Chữ", cat: "thong_dung" },
+      { hanzi: "昨天", pinyin: "zuótiān", meaning: "Hôm qua", cat: "thoi_gian" },
+      { hanzi: "坐", pinyin: "zuò", meaning: "Ngồi", cat: "thong_dung" },
+      { hanzi: "做", pinyin: "zuò", meaning: "Làm", cat: "thong_dung" }
     ];
 
+    let mistakes = JSON.parse(localStorage.getItem('hsk1_mistakes')) || [];
+    let learnedWords = JSON.parse(localStorage.getItem('hsk1_learned')) || [];
+    let notesData = JSON.parse(localStorage.getItem('hsk1_notes')) || {};
     let currentCardIndex = 0;
-    let quizScore = 0;
+    let cardFilterMode = 'all';
+    let currentList = [...hsk1Data];
 
-    function toggleCardDetail() {
-      const detail = document.getElementById('cardDetail');
-      if (detail) {
-        detail.style.display = (detail.style.display === 'none') ? 'block' : 'none';
+    let writingData = [...hsk1Data];
+    let currentWritingIndex = 0;
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const cleanText = text.replace('🔊', '').trim();
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'zh-CN';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
       }
     }
 
-    function updateFlashcard() {
-      const item = hsk1Data[currentCardIndex];
-      document.getElementById('fcHanzi').innerText = item.hanzi;
-      document.getElementById('fcPinyin').innerText = item.pinyin;
-      document.getElementById('fcMeaning').innerText = item.meaning;
-      
-      // Mặc định ẩn Pinyin & Nghĩa khi chuyển từ mới
-      const detail = document.getElementById('cardDetail');
-      if (detail) detail.style.display = 'none';
+    // Chức năng nhận diện giọng nói (Speech-to-Text) chấm điểm phát âm
+    function startSpeechRecognition(targetHanzi, targetPinyin, resultElemId) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Hãy dùng Google Chrome nhé!");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'zh-CN';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      const resElem = document.getElementById(resultElemId);
+      resElem.innerHTML = "🎙️ Đang nghe bạn đọc... Hãy nói to rõ!";
+      resElem.style.color = "#3182ce";
+
+      recognition.onresult = function(event) {
+        const spokenText = event.results[0][0].transcript.trim();
+        // Kiểm tra xem từ nói có khớp với chữ Hán mục tiêu không (hoặc có chứa từ đó)
+        if (spokenText.includes(targetHanzi) || targetHanzi.includes(spokenText)) {
+          resElem.innerHTML = `✅ Chuẩn xác! Bạn vừa đọc: "${spokenText}"`;
+          resElem.style.color = "#38a169";
+        } else {
+          resElem.innerHTML = `❌ Chưa đúng lắm. Bạn đọc là: "${spokenText}" (Gợi ý: ${targetHanzi} - ${targetPinyin})`;
+          resElem.style.color = "#e53e3e";
+        }
+      };
+
+      recognition.onerror = function(event) {
+        resElem.innerHTML = "⚠️ Không nhận diện được âm thanh. Hãy thử lại!";
+        resElem.style.color = "#d69e2e";
+      };
+
+      recognition.start();
     }
 
-    function nextCard() {
-      currentCardIndex = (currentCardIndex + 1) % hsk1Data.length;
-      updateFlashcard();
-    }
-
-    function prevCard() {
-      currentCardIndex = (currentCardIndex - 1 + hsk1Data.length) % hsk1Data.length;
-      updateFlashcard();
+    function updateProgressUI() {
+      const total = hsk1Data.length;
+      const count = learnedWords.length;
+      const percent = Math.round((count / total) * 100);
+      document.getElementById('progressText').innerText = `${count} / ${total} từ (${percent}%)`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
+      document.getElementById('mistakeCount').innerText = mistakes.length;
     }
 
     function switchZhMode(mode) {
       document.getElementById('btnModeFlashcard').classList.toggle('active', mode === 'flashcard');
+      document.getElementById('btnModeList').classList.toggle('active', mode === 'list');
+      document.getElementById('btnModeWriting').classList.toggle('active', mode === 'writing');
       document.getElementById('btnModeQuiz').classList.toggle('active', mode === 'quiz');
+
       document.getElementById('zhFlashcardView').style.display = mode === 'flashcard' ? 'block' : 'none';
+      document.getElementById('zhListView').style.display = mode === 'list' ? 'block' : 'none';
+      document.getElementById('zhWritingView').style.display = mode === 'writing' ? 'block' : 'none';
       document.getElementById('zhQuizView').style.display = mode === 'quiz' ? 'block' : 'none';
-      if (mode === 'quiz') generateQuiz();
+
+      if (mode === 'quiz') {
+        startQuizGame();
+      } else {
+        stopAllTimers();
+        if(mode === 'list') renderVocabularyList(hsk1Data);
+        if(mode === 'writing') initCanvas();
+      }
     }
 
-    function generateQuiz() {
+    function setCardFilter(mode) {
+      cardFilterMode = mode;
+      document.getElementById('tabAll').classList.toggle('active', mode === 'all');
+      document.getElementById('tabMistake').classList.toggle('active', mode === 'mistake');
+
+      if (mode === 'mistake') {
+        currentList = hsk1Data.filter(item => mistakes.includes(item.hanzi));
+        if (currentList.length === 0) {
+          alert("Tuyệt vời! Hiện không có từ nào trong danh sách hay sai cả.");
+          currentList = [...hsk1Data];
+          cardFilterMode = 'all';
+          document.getElementById('tabAll').classList.add('active');
+          document.getElementById('tabMistake').classList.remove('active');
+        }
+      } else {
+        currentList = [...hsk1Data];
+      }
+      currentCardIndex = 0;
+      updateFlashcard();
+    }
+
+    function updateFlashcard() {
+      if (currentList.length === 0) return;
+      const item = currentList[currentCardIndex];
+      document.getElementById('fcHanzi').innerText = item.hanzi;
+      document.getElementById('fcFrontPinyin').innerText = item.pinyin;
+      document.getElementById('fcPinyin').innerText = item.pinyin;
+      document.getElementById('fcMeaning').innerText = item.meaning;
+      
+      if (!learnedWords.includes(item.hanzi)) {
+        learnedWords.push(item.hanzi);
+        localStorage.setItem('hsk1_learned', JSON.stringify(learnedWords));
+        updateProgressUI();
+      }
+      document.getElementById('flashcardObj').classList.remove('is-flipped');
+    }
+
+    function flipCard() {
+      const cardObj = document.getElementById('flashcardObj');
+      const isFlipped = cardObj.classList.toggle('is-flipped');
+      if (isFlipped) speakText(currentList[currentCardIndex].hanzi);
+    }
+
+    function nextCard() {
+      currentCardIndex = (currentCardIndex + 1) % currentList.length;
+      updateFlashcard();
+    }
+
+    function prevCard() {
+      currentCardIndex = (currentCardIndex - 1 + currentList.length) % currentList.length;
+      updateFlashcard();
+    }
+
+    function renderVocabularyList(data) {
+      const container = document.getElementById('vocabListContainer');
+      container.innerHTML = '';
+      if (data.length === 0) {
+        container.innerHTML = `<p style="text-align: center; color: #a0aec0; padding: 20px;">Không tìm thấy từ vựng phù hợp...</p>`;
+        return;
+      }
+      data.forEach(item => {
+        const userNote = notesData[item.hanzi] || '';
+        const div = document.createElement('div');
+        div.className = 'vocab-item';
+        div.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 200px;">
+            <span style="font-size: 26px; font-weight: bold; color: #c53030; min-width: 50px;">${item.hanzi}</span>
+            <div>
+              <div style="font-size: 14px; color: #3182ce; font-weight: bold;">${item.pinyin}</div>
+              <div style="font-size: 13px; color: #2d3748;">${item.meaning}</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button onclick="speakText('${item.hanzi}')" style="background: #edf2f7; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">🔊 Nghe</button>
+            <button onclick="startSpeechRecognition('${item.hanzi}', '${item.pinyin}', 'speech-res-${item.hanzi}')" style="background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">🎤 Đọc thử</button>
+          </div>
+          <div class="speech-box" style="width: 100%; margin-top: 5px; display: flex; justify-content: space-between; align-items: center;">
+            <span id="speech-res-${item.hanzi}" style="font-size: 12px; font-weight: bold; color: #4a5568;">Bấm "Đọc thử" và nói từ này vào microphone để kiểm tra...</span>
+          </div>
+          <div class="note-box">
+            <textarea class="note-input" placeholder="✍️ Ghi chú cá nhân, mẹo nhớ hoặc đặt câu ví dụ..." oninput="saveNote('${item.hanzi}', this.value)">${userNote}</textarea>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function saveNote(hanzi, text) {
+      notesData[hanzi] = text;
+      localStorage.setItem('hsk1_notes', JSON.stringify(notesData));
+    }
+
+    function filterVocabulary() {
+      const keyword = document.getElementById('searchInput').value.toLowerCase();
+      const cat = document.getElementById('categorySelect').value;
+
+      const filtered = hsk1Data.filter(item => {
+        const matchKeyword = item.hanzi.toLowerCase().includes(keyword) || 
+                             item.pinyin.toLowerCase().includes(keyword) || 
+                             item.meaning.toLowerCase().includes(keyword);
+        const matchCat = (cat === 'all') || (item.cat === cat);
+        return matchKeyword && matchCat;
+      });
+      renderVocabularyList(filtered);
+    }
+
+    // Canvas Luyện viết
+    let canvas, ctx, isDrawing = false;
+    function initCanvas() {
+      canvas = document.getElementById('drawCanvas');
+      ctx = canvas.getContext('2d');
+      ctx.lineWidth = 10;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#c53030';
+
+      canvas.onmousedown = startDraw;
+      canvas.onmousemove = draw;
+      canvas.onmouseup = stopDraw;
+      canvas.onmouseleave = stopDraw;
+
+      canvas.ontouchstart = (e) => { startDraw(e.touches[0]); e.preventDefault(); };
+      canvas.ontouchmove = (e) => { draw(e.touches[0]); e.preventDefault(); };
+      canvas.ontouchend = stopDraw;
+
+      updateWritingCharUI();
+    }
+
+    function updateWritingCharUI() {
+      const item = writingData[currentWritingIndex];
+      document.getElementById('writingCharTitle').innerText = `${item.hanzi} - ${item.pinyin} (${item.meaning})`;
+      document.getElementById('bgCharDisplay').innerText = item.hanzi;
+      clearCanvas();
+    }
+
+    function clearCanvas() {
+      if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+    }
+
+    function stopDraw() {
+      isDrawing = false;
+    }
+
+    function nextWritingChar() {
+      currentWritingIndex = (currentWritingIndex + 1) % writingData.length;
+      updateWritingCharUI();
+    }
+
+    function prevWritingChar() {
+      currentWritingIndex = (currentWritingIndex - 1 + writingData.length) % writingData.length;
+      updateWritingCharUI();
+    }
+
+    // Quiz Tốc Độ
+    let quizScore = 0;
+    let highScore = localStorage.getItem('hsk1_highscore') || 0;
+    let totalTime = 60;
+    let totalTimer = null;
+    let questionTimer = null;
+    let questionTimeLeft = 5;
+    let isGameOver = false;
+
+    function stopAllTimers() {
+      clearInterval(totalTimer);
+      clearInterval(questionTimer);
+    }
+
+    function startQuizGame() {
+      stopAllTimers();
+      quizScore = 0;
+      totalTime = 60;
+      isGameOver = false;
+
+      highScore = localStorage.getItem('hsk1_highscore') || 0;
+      document.getElementById('highScore').innerText = `👑 Kỷ lục: ${highScore}`;
+      document.getElementById('quizScore').innerText = `Điểm: 0`;
+      document.getElementById('gameTimer').innerText = `⏱️ Thời gian: 60s`;
+      document.getElementById('btnRestartQuiz').style.display = 'none';
+
+      totalTimer = setInterval(() => {
+        totalTime--;
+        document.getElementById('gameTimer').innerText = `⏱️ Thời gian: ${totalTime}s`;
+        if (totalTime <= 0) endQuizGame();
+      }, 1000);
+
+      generateQuizQuestion();
+    }
+
+    function generateQuizQuestion() {
+      if (isGameOver) return;
+
+      clearInterval(questionTimer);
+      questionTimeLeft = 5;
+      updateQuestionBar();
+
+      questionTimer = setInterval(() => {
+        questionTimeLeft -= 0.1;
+        updateQuestionBar();
+        if (questionTimeLeft <= 0) {
+          clearInterval(questionTimer);
+          generateQuizQuestion();
+        }
+      }, 100);
+
       const target = hsk1Data[Math.floor(Math.random() * hsk1Data.length)];
-      document.getElementById('quizWord').innerText = target.hanzi;
+      document.getElementById('quizWord').innerText = `${target.hanzi} 🔊`;
+      document.getElementById('quizWord').onclick = () => speakText(target.hanzi);
 
       let options = [target.meaning];
       while (options.length < 4 && options.length < hsk1Data.length) {
@@ -149,26 +769,69 @@
 
       const optionsContainer = document.getElementById('quizOptions');
       optionsContainer.innerHTML = '';
-      options.forEach(opt => {
+      const labels = ['A', 'B', 'C', 'D'];
+
+      options.forEach((opt, index) => {
         const btn = document.createElement('button');
         btn.className = 'quiz-opt-btn';
-        btn.innerText = opt;
+        btn.innerText = `${labels[index]}. ${opt}`;
+        btn.style.cssText = "background: #f7fafc; border: 1px solid #e2e8f0; color: #2d3748; padding: 12px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px; text-align: left; transition: all 0.2s ease;";
+        
         btn.onclick = () => {
+          if (isGameOver) return;
+          clearInterval(questionTimer);
+
           if (opt === target.meaning) {
-            alert("🎉 Chính xác! +10 điểm");
             quizScore += 10;
+            document.getElementById('quizScore').innerText = `Điểm: ${quizScore}`;
+            mistakes = mistakes.filter(m => m !== target.hanzi);
           } else {
-            alert("❌ Chưa đúng rồi, thử lại nhé!");
+            if (!mistakes.includes(target.hanzi)) mistakes.push(target.hanzi);
           }
-          document.getElementById('quizScore').innerText = `Điểm: ${quizScore}`;
-          generateQuiz();
+          localStorage.setItem('hsk1_mistakes', JSON.stringify(mistakes));
+          updateProgressUI();
+          generateQuizQuestion();
         };
         optionsContainer.appendChild(btn);
       });
     }
 
-    // Khởi chạy
-    updateFlashcard();
+    function updateQuestionBar() {
+      const percentage = (questionTimeLeft / 5) * 100;
+      document.getElementById('questionBar').style.width = `${Math.max(0, percentage)}%`;
+    }
+
+    function endQuizGame() {
+      stopAllTimers();
+      isGameOver = true;
+
+      let isNewRecord = false;
+      if (quizScore > highScore) {
+        highScore = quizScore;
+        localStorage.setItem('hsk1_highscore', highScore);
+        isNewRecord = true;
+      }
+
+      document.getElementById('quizWord').innerText = "🏁 HẾT GIỜ!";
+      document.getElementById('quizWord').onclick = null;
+      
+      let resultHTML = `<p style="font-size: 18px; font-weight: bold; color: #2b6cb0;">Tổng điểm: ${quizScore} điểm</p>`;
+      if (isNewRecord) {
+        resultHTML += `<p style="font-size: 16px; color: #e53e3e; font-weight: bold; margin-top: 5px;">🎉 XUẤT SẮC! BẠN ĐÃ ĐẠT KỶ LỤC MỚI!</p>`;
+      }
+      
+      document.getElementById('quizOptions').innerHTML = resultHTML;
+      document.getElementById('btnRestartQuiz').style.display = 'inline-block';
+      document.getElementById('questionBar').style.width = '0%';
+      document.getElementById('highScore').innerText = `👑 Kỷ lục: ${highScore}`;
+      updateProgressUI();
+    }
+
+    window.onload = function() {
+      updateFlashcard();
+      updateProgressUI();
+      renderVocabularyList(hsk1Data);
+    };
   </script>
 </body>
 </html>
