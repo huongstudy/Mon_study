@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MON STUDY - Tiếng Trung HSK 1</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .flashcard-simple {
+      background: var(--bg-color, #ffffff);
+      border: 2px solid var(--border-color, #e2e8f0);
+      border-radius: 12px;
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+    .flashcard-simple:hover {
+      border-color: #ee5d50;
+      box-shadow: 0 4px 12px rgba(238, 93, 80, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="index.html" class="back-link">⬅️ Quay lại Trang Chủ</a>
+
+    <div class="header" style="background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%); border-left: 5px solid #ee5d50;">
+      <div>
+        <h1 style="color: #c53030;">🇨🇳 Học Tiếng Trung HSK 1</h1>
+        <p style="font-size: 13px; color: #718096; margin-top: 4px;">Nền tảng 150 từ vựng cốt lõi</p>
+      </div>
+      <button id="themeToggleBtn" class="theme-btn">🌙 Chế độ tối</button>
+    </div>
+
+    <div class="card">
+      <div class="mode-selector">
+        <button id="btnModeFlashcard" class="mode-btn active" onclick="switchZhMode('flashcard')">📇 Flashcard HSK 1</button>
+        <button id="btnModeQuiz" class="mode-btn" onclick="switchZhMode('quiz')">🧩 Quiz Trắc Nghiệm</button>
+      </div>
+
+      <!-- 1. Flashcard View -->
+      <div id="zhFlashcardView">
+        <div class="flashcard-simple" onclick="toggleCardDetail()">
+          <span class="badge" style="background: #feebc8; color: #c05621;">HSK 1</span>
+          <h2 id="fcHanzi" style="font-size: 48px; color: #1a202c; margin: 15px 0 5px 0;">你好</h2>
+          
+          <div id="cardDetail" style="display: none; margin-top: 10px;">
+            <h3 id="fcPinyin" style="font-size: 24px; color: #3182ce; margin-bottom: 4px;">nǐ hǎo</h3>
+            <p id="fcMeaning" style="font-size: 18px; color: #2d3748; font-weight: 600;">Xin chào</p>
+          </div>
+
+          <p id="fcHint" class="hint-text" style="margin-top: 15px; color: #a0aec0; font-size: 12px;">👆 Bấm vào thẻ để hiện/ẩn Pinyin & Nghĩa</p>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+          <button class="pomo-btn reset" onclick="prevCard()">⬅️ Từ trước</button>
+          <button class="checkin-btn" onclick="nextCard()">Từ tiếp ➡️</button>
+        </div>
+      </div>
+
+      <!-- 2. Quiz View -->
+      <div id="zhQuizView" style="display: none;">
+        <div class="quiz-card">
+          <div class="quiz-header">
+            <span>Thách thức HSK 1</span>
+            <span id="quizScore" class="badge" style="background: #c6f6d5; color: #22543d;">Điểm: 0</span>
+          </div>
+          <h2 id="quizWord" style="font-size: 40px; margin: 15px 0; color: #1a202c;">你好</h2>
+          <div class="quiz-options" id="quizOptions"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+  <!-- Script xử lý riêng cho Tiếng Trung -->
+  <script>
+    const hsk1Data = [
+      { hanzi: "你好", pinyin: "nǐ hǎo", meaning: "Xin chào" },
+      { hanzi: "谢谢", pinyin: "xièxie", meaning: "Cảm ơn" },
+      { hanzi: "不客气", pinyin: "bú kèqi", meaning: "Đừng khách khí / Không có gì" },
+      { hanzi: "再见", pinyin: "zàijiàn", meaning: "Tạm biệt" },
+      { hanzi: "爱", pinyin: "ài", meaning: "Yêu, thích" },
+      { hanzi: "八", pinyin: "bā", meaning: "Số 8" },
+      { hanzi: "爸爸", pinyin: "bàba", meaning: "Bố, ba" },
+      { hanzi: "杯子", pinyin: "bēizi", meaning: "Cái cốc, ly" },
+      { hanzi: "北京", pinyin: "Běijīng", meaning: "Bắc Kinh" },
+      { hanzi: "本", pinyin: "běn", meaning: "Cuốn, quyển (lượng từ)" }
+    ];
+
+    let currentCardIndex = 0;
+    let quizScore = 0;
+
+    function toggleCardDetail() {
+      const detail = document.getElementById('cardDetail');
+      if (detail) {
+        detail.style.display = (detail.style.display === 'none') ? 'block' : 'none';
+      }
+    }
+
+    function updateFlashcard() {
+      const item = hsk1Data[currentCardIndex];
+      document.getElementById('fcHanzi').innerText = item.hanzi;
+      document.getElementById('fcPinyin').innerText = item.pinyin;
+      document.getElementById('fcMeaning').innerText = item.meaning;
+      
+      // Mặc định ẩn Pinyin & Nghĩa khi chuyển từ mới
+      const detail = document.getElementById('cardDetail');
+      if (detail) detail.style.display = 'none';
+    }
+
+    function nextCard() {
+      currentCardIndex = (currentCardIndex + 1) % hsk1Data.length;
+      updateFlashcard();
+    }
+
+    function prevCard() {
+      currentCardIndex = (currentCardIndex - 1 + hsk1Data.length) % hsk1Data.length;
+      updateFlashcard();
+    }
+
+    function switchZhMode(mode) {
+      document.getElementById('btnModeFlashcard').classList.toggle('active', mode === 'flashcard');
+      document.getElementById('btnModeQuiz').classList.toggle('active', mode === 'quiz');
+      document.getElementById('zhFlashcardView').style.display = mode === 'flashcard' ? 'block' : 'none';
+      document.getElementById('zhQuizView').style.display = mode === 'quiz' ? 'block' : 'none';
+      if (mode === 'quiz') generateQuiz();
+    }
+
+    function generateQuiz() {
+      const target = hsk1Data[Math.floor(Math.random() * hsk1Data.length)];
+      document.getElementById('quizWord').innerText = target.hanzi;
+
+      let options = [target.meaning];
+      while (options.length < 4 && options.length < hsk1Data.length) {
+        let rand = hsk1Data[Math.floor(Math.random() * hsk1Data.length)].meaning;
+        if (!options.includes(rand)) options.push(rand);
+      }
+      options.sort(() => Math.random() - 0.5);
+
+      const optionsContainer = document.getElementById('quizOptions');
+      optionsContainer.innerHTML = '';
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-opt-btn';
+        btn.innerText = opt;
+        btn.onclick = () => {
+          if (opt === target.meaning) {
+            alert("🎉 Chính xác! +10 điểm");
+            quizScore += 10;
+          } else {
+            alert("❌ Chưa đúng rồi, thử lại nhé!");
+          }
+          document.getElementById('quizScore').innerText = `Điểm: ${quizScore}`;
+          generateQuiz();
+        };
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    // Khởi chạy
+    updateFlashcard();
+  </script>
+</body>
+</html>

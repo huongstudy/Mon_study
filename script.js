@@ -221,3 +221,100 @@ newQuoteBtn.addEventListener('click', getRandomQuote);
 
 // Tự động đổi 1 câu ngẫu nhiên khi mới mở trang
 getRandomQuote();
+// Dữ liệu HSK 1
+const hsk1Data = [
+  { hanzi: "你好", pinyin: "nǐ hǎo", meaning: "Xin chào" },
+  { hanzi: "谢谢", pinyin: "xièxie", meaning: "Cảm ơn" },
+  { hanzi: "不客气", pinyin: "bú kèqi", meaning: "Đừng khách khí / Không có gì" },
+  { hanzi: "再见", pinyin: "zàijiàn", meaning: "Tạm biệt" },
+  { hanzi: "爱", pinyin: "ài", meaning: "Yêu, thích" },
+  { hanzi: "八", pinyin: "bā", meaning: "Số 8" },
+  { hanzi: "爸爸", pinyin: "bàba", meaning: "Bố, ba" },
+  { hanzi: "杯子", pinyin: "bēizi", meaning: "Cái cốc, ly" },
+  { hanzi: "北京", pinyin: "Běijīng", meaning: "Bắc Kinh" },
+  { hanzi: "本", pinyin: "běn", meaning: "Cuốn, quyển (lượng từ)" }
+];
+
+let currentCardIndex = 0;
+let quizScore = 0;
+
+function toggleCardDetail() {
+  const detail = document.getElementById('cardDetail');
+  if (detail) {
+    if (detail.style.display === 'none') {
+      detail.style.display = 'block';
+    } else {
+      detail.style.display = 'none';
+    }
+  }
+}
+
+function updateFlashcard() {
+  const item = hsk1Data[currentCardIndex];
+  const hanziElem = document.getElementById('fcHanzi');
+  if (!hanziElem) return;
+
+  hanziElem.innerText = item.hanzi;
+  document.getElementById('fcPinyin').innerText = item.pinyin;
+  document.getElementById('fcMeaning').innerText = item.meaning;
+  
+  // Ẩn Pinyin & Nghĩa khi chuyển sang từ mới
+  const detail = document.getElementById('cardDetail');
+  if (detail) detail.style.display = 'none';
+}
+
+function nextCard() {
+  currentCardIndex = (currentCardIndex + 1) % hsk1Data.length;
+  updateFlashcard();
+}
+
+function prevCard() {
+  currentCardIndex = (currentCardIndex - 1 + hsk1Data.length) % hsk1Data.length;
+  updateFlashcard();
+}
+
+function switchZhMode(mode) {
+  document.getElementById('btnModeFlashcard').classList.toggle('active', mode === 'flashcard');
+  document.getElementById('btnModeQuiz').classList.toggle('active', mode === 'quiz');
+  document.getElementById('zhFlashcardView').style.display = mode === 'flashcard' ? 'block' : 'none';
+  document.getElementById('zhQuizView').style.display = mode === 'quiz' ? 'block' : 'none';
+  if (mode === 'quiz') generateQuiz();
+}
+
+function generateQuiz() {
+  const target = hsk1Data[Math.floor(Math.random() * hsk1Data.length)];
+  document.getElementById('quizWord').innerText = target.hanzi;
+
+  let options = [target.meaning];
+  while (options.length < 4 && options.length < hsk1Data.length) {
+    let rand = hsk1Data[Math.floor(Math.random() * hsk1Data.length)].meaning;
+    if (!options.includes(rand)) options.push(rand);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  const optionsContainer = document.getElementById('quizOptions');
+  optionsContainer.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt-btn';
+    btn.innerText = opt;
+    btn.onclick = () => {
+      if (opt === target.meaning) {
+        alert("🎉 Chính xác! +10 điểm");
+        quizScore += 10;
+      } else {
+        alert("❌ Chưa đúng rồi, thử lại nhé!");
+      }
+      document.getElementById('quizScore').innerText = `Điểm: ${quizScore}`;
+      generateQuiz();
+    };
+    optionsContainer.appendChild(btn);
+  });
+}
+
+// Khởi chạy ban đầu nếu đang ở trang tiengtrung.html
+document.addEventListener('DOMContentLoaded', function() {
+  if (document.getElementById('fcHanzi')) {
+    updateFlashcard();
+  }
+});

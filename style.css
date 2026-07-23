@@ -289,3 +289,57 @@ body {
 .quote-btn:hover {
   background: var(--border-color);
 }
+/* Nút quay lại & Thẻ Hub */
+.back-link {
+  display: inline-block;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.subject-hub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hub-item {
+  background: var(--bg-color);
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hub-link-btn {
+  background: #4318ff;
+  color: white;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+/* Thẻ Flashcard đơn giản, mượt mà */
+.flashcard-simple {
+  background: var(--bg-color);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.flashcard-simple:hover {
+  border-color: #ee5d50;
+}

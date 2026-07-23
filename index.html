@@ -61,33 +61,31 @@
     </div>
     <!-- 4. Tiến độ học tập -->
     <div class="card">
-      <h3>📚 Tiến độ học tập</h3>
+      <!-- 4. Danh Sách Môn Học -->
+    <div class="card">
+      <h3>📚 Trung Tâm Học Tập</h3>
+      <p style="font-size: 13px; color: #a0aec0; margin-bottom: 12px;">Chọn môn học để chuyển sang trang học chuyên biệt:</p>
       
-      <div class="subject">
-        <div class="subject-info">
-          <span>HTML & CSS Cơ bản (<span id="html-percent">70</span>%)</span>
-          <button class="update-btn" onclick="updateProgress('html-percent', 'html-bar')">✏️ Sửa %</button>
+      <div class="subject-hub-list">
+        <!-- Môn Tiếng Trung -->
+        <div class="hub-item">
+          <div>
+            <strong>🇨🇳 Tiếng Trung HSK 1</strong>
+            <p style="font-size: 12px; color: #718096;">Flashcard & Quiz trắc nghiệm</p>
+          </div>
+          <a href="tiengtrung.html" class="hub-link-btn">Vào học ➔</a>
         </div>
-        <div class="progress-bar"><div id="html-bar" class="progress" style="width: 70%;"></div></div>
-      </div>
 
-      <div class="subject">
-        <div class="subject-info">
-          <span>JavaScript (<span id="js-percent">30</span>%)</span>
-          <button class="update-btn" onclick="updateProgress('js-percent', 'js-bar')">✏️ Sửa %</button>
+        <!-- Môn Excel -->
+        <div class="hub-item" style="margin-top: 10px;">
+          <div>
+            <strong>📊 Excel & Hàm tính</strong>
+            <p style="font-size: 12px; color: #718096;">Phím tắt & mẹo xử lý dữ liệu</p>
+          </div>
+          <a href="#" class="hub-link-btn" onclick="alert('Trang Excel sắp ra mắt nhé Hương!')">Vào học ➔</a>
         </div>
-        <div class="progress-bar"><div id="js-bar" class="progress" style="width: 30%;"></div></div>
-      </div>
-
-      <div class="subject">
-        <div class="subject-info">
-          <span>Tiếng Trung (<span id="cn-percent">45</span>%)</span>
-          <button class="update-btn" onclick="updateProgress('cn-percent', 'cn-bar')">✏️ Sửa %</button>
-        </div>
-        <div class="progress-bar"><div id="cn-bar" class="progress" style="width: 45%;"></div></div>
       </div>
     </div>
-
     <!-- 5. Ghi chú -->
     <div class="card">
       <h3>📝 Ghi chú gần đây</h3>
