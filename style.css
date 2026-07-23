@@ -1,0 +1,291 @@
+:root {
+  --bg-color: #f4f7fe;
+  --card-bg: #ffffff;
+  --text-color: #2b3674;
+  --title-color: #1b2559;
+  --border-color: #e2e8f0;
+}
+
+[data-theme="dark"] {
+  --bg-color: #0b1437;
+  --card-bg: #111c44;
+  --text-color: #e0e6ed;
+  --title-color: #ffffff;
+  --border-color: #2b3674;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  display: flex;
+  justify-content: center;
+  padding: 30px 15px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  display: flex !important;
+  flex-direction: column !important; /* Lệnh quan trọng giữ các khối xếp hàng dọc */
+  gap: 16px;
+}
+
+.card, .header {
+  background: var(--card-bg) !important;
+  padding: 18px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: background 0.3s;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.card h3, .header h1 {
+  color: var(--title-color) !important;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  font-size: 20px;
+  margin-bottom: 0;
+}
+
+.checkin-btn {
+  background: #4318ff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.theme-btn {
+  background: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.streak-card {
+  background: #fff5f5 !important;
+  border-left: 5px solid #ee5d50;
+}
+
+.target-card {
+  background: #e9f3ff !important;
+  border-left: 5px solid #4318ff;
+}
+
+/* Đồng hồ Pomodoro */
+.pomodoro-card {
+  text-align: center;
+}
+
+.timer-display {
+  font-size: 42px;
+  font-weight: bold;
+  color: #4318ff;
+  margin: 15px 0;
+  letter-spacing: 2px;
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pomo-btn {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pomo-btn.start { background: #4318ff; color: white; }
+.pomo-btn.pause { background: #f59e0b; color: white; }
+.pomo-btn.reset { background: #e2e8f0; color: #2b3674; }
+
+/* Tiến độ */
+.subject {
+  margin-bottom: 14px;
+}
+
+.subject-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #4318ff;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.update-btn {
+  background: var(--border-color);
+  border: none;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  color: #4318ff;
+  font-weight: bold;
+}
+
+/* Ghi chú */
+.notes-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notes-list li {
+  background: var(--bg-color);
+  padding: 10px 12px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+}
+
+.notes-list li.completed span {
+  text-decoration: line-through;
+  color: #a0aec0;
+}
+
+.note-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-done {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-del {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+/* Lịch & Công việc hôm nay */
+.planner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.date-badge {
+  background: #e9f3ff;
+  color: #4318ff;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-list li {
+  background: var(--bg-color);
+  padding: 10px 12px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+}
+
+.task-list li.done span {
+  text-decoration: line-through;
+  color: #a0aec0;
+}
+/* Trích dẫn truyền cảm hứng */
+.quote-card {
+  background: linear-gradient(135deg, #e9f3ff 0%, #ffffff 100%) !important;
+  border-left: 5px solid #4318ff;
+}
+
+[data-theme="dark"] .quote-card {
+  background: linear-gradient(135deg, #111c44 0%, #0b1437 100%) !important;
+}
+
+.quote-text {
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--title-color);
+  margin-top: 4px;
+}
+
+.quote-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.quote-btn:hover {
+  background: var(--border-color);
+}

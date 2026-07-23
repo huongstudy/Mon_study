@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MON STUDY</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <!-- 1. Đầu trang -->
+    <div class="header">
+      <h1 id="greeting">☀️ Chào buổi sáng, Hương!</h1>
+      <div style="display: flex; gap: 8px;">
+        <button id="themeToggleBtn" class="theme-btn">🌙 Chế độ tối</button>
+        <button class="checkin-btn">📅 Điểm danh hôm nay</button>
+      </div>
+    </div>
+<!-- 1.5 Trích dẫn truyền cảm hứng -->
+    <div class="card quote-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 12px; font-weight: bold; color: #4318ff; text-transform: uppercase;">✨ Lời nhắn hôm nay</span>
+        <button id="newQuoteBtn" class="quote-btn">🎲 Đổi câu mới</button>
+      </div>
+      <p id="quoteText" class="quote-text">"Hành trình vạn dặm bắt đầu từ một bước chân."</p>
+    </div>
+    <!-- 2. Chuỗi học -->
+    <div class="card streak-card">
+      🔥 <strong>Chuỗi học hiện tại:</strong> 5 ngày liên tiếp
+    </div>
+
+    <!-- 3. Mục tiêu -->
+    <div class="card target-card">
+      🎯 <strong>Mục tiêu:</strong> Hoàn thành website cá nhân Mon Study trong tháng này!
+    </div>
+
+    <!-- 3.5 Đồng hồ Pomodoro -->
+    <div class="card pomodoro-card">
+      <h3>⏱️ Đồng hồ Pomodoro (30 phút)</h3>
+      <div class="timer-display" id="timer">30:00</div>
+      <div class="timer-controls">
+        <button id="startTimerBtn" class="pomo-btn start">▶ Bắt đầu</button>
+        <button id="pauseTimerBtn" class="pomo-btn pause">⏸ Tạm dừng</button>
+        <button id="resetTimerBtn" class="pomo-btn reset">🔄 Đặt lại</button>
+      </div>
+    </div>
+<!-- 3.6 Lịch & Công việc trong ngày -->
+    <div class="card planner-card">
+      <div class="planner-header">
+        <h3>📅 Công việc hôm nay</h3>
+        <span id="currentDate" class="date-badge">Đang tải ngày...</span>
+      </div>
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <input type="text" id="taskInput" placeholder="Thêm việc cần làm hôm nay..." style="flex: 1; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 8px; outline: none; background: var(--bg-color); color: var(--text-color);">
+        <button id="addTaskBtn" style="background: #22c55e; color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer;">+ Thêm</button>
+      </div>
+
+      <ul class="task-list" id="taskList"></ul>
+    </div>
+    <!-- 4. Tiến độ học tập -->
+    <div class="card">
+      <h3>📚 Tiến độ học tập</h3>
+      
+      <div class="subject">
+        <div class="subject-info">
+          <span>HTML & CSS Cơ bản (<span id="html-percent">70</span>%)</span>
+          <button class="update-btn" onclick="updateProgress('html-percent', 'html-bar')">✏️ Sửa %</button>
+        </div>
+        <div class="progress-bar"><div id="html-bar" class="progress" style="width: 70%;"></div></div>
+      </div>
+
+      <div class="subject">
+        <div class="subject-info">
+          <span>JavaScript (<span id="js-percent">30</span>%)</span>
+          <button class="update-btn" onclick="updateProgress('js-percent', 'js-bar')">✏️ Sửa %</button>
+        </div>
+        <div class="progress-bar"><div id="js-bar" class="progress" style="width: 30%;"></div></div>
+      </div>
+
+      <div class="subject">
+        <div class="subject-info">
+          <span>Tiếng Trung (<span id="cn-percent">45</span>%)</span>
+          <button class="update-btn" onclick="updateProgress('cn-percent', 'cn-bar')">✏️ Sửa %</button>
+        </div>
+        <div class="progress-bar"><div id="cn-bar" class="progress" style="width: 45%;"></div></div>
+      </div>
+    </div>
+
+    <!-- 5. Ghi chú -->
+    <div class="card">
+      <h3>📝 Ghi chú gần đây</h3>
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+        <input type="text" id="noteInput" placeholder="Nhập ghi chú mới..." style="flex: 1; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none;">
+        <button id="addNoteBtn" style="background: #4318ff; color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer;">Thêm</button>
+      </div>
+
+      <ul class="notes-list" id="notesList"></ul>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
