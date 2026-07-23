@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Học Excel & Hàm Tính</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="container" id="excelPage">
+    <!-- Header Điều Hướng -->
+    <header class="header-nav">
+      <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Trang chủ</a>
+      <h2>📊 Trung Tâm Học Excel & Hàm Tính</h2>
+    </header>
+
+    <!-- Thanh Chuyển Tab Chức Năng -->
+    <div class="excel-tabs">
+      <button class="excel-tab-btn active" onclick="switchExcelTab(event, 'shortcuts')">⚡ Phím Tắt Mẹo Hay</button>
+      <button class="excel-tab-btn" onclick="switchExcelTab(event, 'formulas')">📐 Tra Cứu Hàm</button>
+      <button class="excel-tab-btn" onclick="switchExcelTab(event, 'advanced')">🚀 Dashboard & Power Tools</button>
+      <button class="excel-tab-btn" onclick="switchExcelTab(event, 'quiz')">🧩 Quiz Trắc Nghiệm</button>
+    </div>
+
+    <!-- TAB 1: PHÍM TẮT -->
+    <section id="tab-shortcuts" class="excel-section active">
+      <div class="card search-card">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="shortcutSearch" placeholder="Tìm kiếm phím tắt (VD: Ctrl, Alt, Filter...)" oninput="filterShortcuts()">
+        </div>
+      </div>
+      <div class="grid-cards" id="shortcutGrid">
+        <!-- JS render phím tắt tại đây -->
+      </div>
+    </section>
+
+    <!-- TAB 2: TRA CỨU HÀM -->
+    <section id="tab-formulas" class="excel-section">
+      <div class="card search-card">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="formulaSearch" placeholder="Tìm tên hàm (VD: VLOOKUP, FILTER, UNIQUE, SUMIFS...)" oninput="filterFormulas()">
+        </div>
+      </div>
+      <div class="grid-cards" id="formulaGrid">
+        <!-- JS render hàm tại đây -->
+      </div>
+    </section>
+
+    <!-- TAB 3: DASHBOARD & POWER TOOLS (NÂNG CAO) -->
+    <section id="tab-advanced" class="excel-section">
+      <div class="card search-card">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="advancedSearch" placeholder="Tìm kiếm Dashboard, Power Query, DAX, VBA..." oninput="filterAdvanced()">
+        </div>
+      </div>
+      <div class="grid-cards" id="advancedGrid">
+        <!-- JS render kiến thức nâng cao tại đây -->
+      </div>
+    </section>
+
+    <!-- TAB 4: QUIZ TRẮC NGHIỆM EXCEL -->
+    <section id="tab-quiz" class="excel-section">
+      <div class="card quiz-card">
+        <div class="quiz-header">
+          <h3><i class="fa-solid fa-graduation-cap"></i> Kiểm tra kiến thức Excel</h3>
+          <span class="quiz-score-badge">Điểm: <strong id="excelQuizScore">0</strong></span>
+        </div>
+        <div class="quiz-body">
+          <p id="excelQuizQuestion" class="quiz-question">Đang tải câu hỏi...</p>
+          <div id="excelQuizOptions" class="quiz-options-list">
+            <!-- JS render các lựa chọn -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MỤC GHI CHÚ CÁ NHÂN -->
+    <section class="card notes-section">
+      <h3><i class="fa-solid fa-pen-to-square"></i> Ghi chú mẹo Excel cá nhân</h3>
+      <div class="note-input-group">
+        <input type="text" id="excelNoteInput" placeholder="Nhập mẹo hoặc công thức Hương cần nhớ...">
+        <button onclick="addExcelNote()" class="btn-primary">Lưu ghi chú</button>
+      </div>
+      <ul id="excelNoteList" class="note-list">
+        <!-- JS render danh sách ghi chú -->
+      </ul>
+    </section>
+  </div>
+
+  <!-- POPUP CỬA SỔ HỌC CHI TIẾT KỸ NĂNG NÂNG CAO -->
+  <div id="advancedModal" class="modal-overlay" onclick="closeAdvancedModalOnOverlay(event)">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="closeAdvancedModal()">&times;</button>
+      <div class="modal-header">
+        <span id="modalBadge" class="excel-badge"></span>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDesc"></p>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <h4><i class="fa-solid fa-list-check"></i> Các bước thực hiện chi tiết:</h4>
+          <ol id="modalSteps" class="steps-list"></ol>
+        </div>
+        <div class="modal-section" id="modalCodeSection">
+          <div class="code-header">
+            <h4><i class="fa-solid fa-code"></i> Cú pháp / Thao tác mẫu:</h4>
+            <button class="btn-copy" onclick="copyModalCode()"><i class="fa-regular fa-copy"></i> Sao chép</button>
+          </div>
+          <pre id="modalCode" class="modal-code-block"></pre>
+        </div>
+        <div class="modal-section tip-box">
+          <h4><i class="fa-solid fa-lightbulb"></i> Mẹo chuyên nghiệp từ Hương:</h4>
+          <p id="modalTip"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
